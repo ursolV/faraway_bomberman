@@ -7,26 +7,36 @@ using UnityEngine;
 
 namespace Managers
 {
+    /// <summary>
+    /// It switches locations.
+    /// Acts as a mediator between characters and bombs
+    /// </summary>
     public class LocationManager : MonoBehaviour
     {
         [SerializeField] private Location[] locations;
 
         private Location _currentLocation;
 
-        public string CurrentLocation { get; private set; }
+        public string CurrentLocationId { get; private set; }
 
-        public List<string> Locations => locations.Select(l => l.name).ToList();
+        /// <summary>
+        /// id of all available locations
+        /// </summary>
+        public List<string> LocationIds => locations.Select(l => l.name).ToList();
 
+        /// <summary>
+        /// Load the location and apply the save
+        /// </summary>
         public void LoadLocation(string locationId, LocationSave save)
         {
-            UnloadLocation();
+            UnloadCurrentLocation();
 
             _currentLocation = locations.First(location => string.Equals(location.name, locationId, StringComparison.CurrentCultureIgnoreCase));
             _currentLocation.Enable(save);
-            CurrentLocation = locationId;
+            CurrentLocationId = locationId;
         }
 
-        public void UnloadLocation()
+        public void UnloadCurrentLocation()
         {
             if (_currentLocation != null)
             {
@@ -34,11 +44,19 @@ namespace Managers
             }
         }
 
+        /// <summary>
+        /// Get location saves that can be saved for further apply
+        /// </summary>
+        /// <returns></returns>
         public (string id, LocationSave progress) GetProgress()
         {
             return (_currentLocation.name, _currentLocation.GetProgress());
         }
 
+        /// <summary>
+        /// Throw a bomb at the current location
+        /// </summary>
+        /// <param name="strength">Throwing power. Between 0-1</param>
         public async Task Throw(string bombId, float strength)
         {
             await _currentLocation.Throw(bombId, strength);

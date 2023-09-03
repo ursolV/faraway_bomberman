@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Factories;
 using Managers;
 using UnityEngine;
 
@@ -9,10 +10,14 @@ namespace Map
 {
     public class Location : MonoBehaviour
     {
-        [SerializeField] private Bomb[] bombs;
+        [SerializeField] private BombFactory bombFactory;
         [SerializeField] private Character[] characters;
         [SerializeField] private Character selectedCharacter;
 
+        /// <summary>
+        /// turn on the location and apply the save
+        /// </summary>
+        /// <param name="locationSave"></param>
         public void Enable(LocationSave locationSave)
         {
             gameObject.SetActive(true);
@@ -25,11 +30,6 @@ namespace Map
                     character.UnpackSave(save);
                 }
             }
-
-            foreach (var bomb in bombs)
-            {
-                bomb.Initialize(this);
-            }
         }
 
         public void Disable()
@@ -37,19 +37,27 @@ namespace Map
             gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// Throw a bomb
+        /// </summary>
+        /// <param name="strength">Throwing power. Between 0-1</param>
         public async Task Throw(string bombId, float strength)
         {
-            var bomb = bombs.First(b => b.name == bombId);
+            var bomb = bombFactory.GetBomb(bombId);
+            bomb.SetLocation(this);
             var nearestEnemy = characters.Where(c => c.Enemy && c.Health > 0).OrderBy(c =>
                 Vector3.Distance(selectedCharacter.transform.position, c.transform.position)).First();
             var direction = nearestEnemy.transform.position - selectedCharacter.transform.position;
-            bomb.Throw(selectedCharacter.transform.position, direction, strength);
 
             selectedCharacter.Attack();
-            //todo
-            await Task.Delay(2000);
+            await bomb.Throw(selectedCharacter.transform.position, direction, strength);
         }
 
+        /// <summary>
+        /// Explosion at a specific point. Damage to characters will be inflicted depending on the epicenter of the explosion
+        /// </summary>
+        /// <param name="position">Epicenter of the explosion</param>
+        /// <param name="explosionPower">maximum damage that can be caused by this explosion</param>
         public void Explosion(Vector3 position, float explosionRadius, int explosionPower)
         {
             foreach (var character in characters)
@@ -75,6 +83,10 @@ namespace Map
             }
         }
 
+        /// <summary>
+        /// Get a location save that can be used later
+        /// </summary>
+        /// <returns></returns>
         public LocationSave GetProgress()
         {
             var progress = new LocationSave()
@@ -85,6 +97,9 @@ namespace Map
         }
     }
     
+    /// <summary>
+    /// Data that stores the state of the location
+    /// </summary>
     [Serializable]
     public struct LocationSave
     {

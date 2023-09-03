@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace UI
 {
+    /// <summary>
+    /// Opens and closes windows according to their IDs.
+    /// You can pass parameters to windows
+    /// </summary>
     public class WindowManager : MonoBehaviour
     {
         [SerializeField] private List<BaseWindow> windows;
@@ -22,6 +26,9 @@ namespace UI
             OpenWindow(windowId, default);
         }
         
+        /// <summary>
+        /// Open a window and pass parameters to it
+        /// </summary>
         public void OpenWindow(string windowId, object windowParam)
         {
             var window = GetWindow(windowId);

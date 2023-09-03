@@ -21,7 +21,7 @@ namespace UI
 
         private void OnNewGameClick()
         {
-            var locationId = GameManager.Instance.LocationManager.Locations[locationDropdown.value];
+            var locationId = GameManager.Instance.LocationManager.LocationIds[locationDropdown.value];
             GameManager.Instance.SaveManager.DeleteProgress(locationId);
             GameManager.Instance.LoadLocation(locationId);
             Close();
@@ -29,14 +29,14 @@ namespace UI
 
         private void OnContinueClick()
         {
-            var locationId = GameManager.Instance.LocationManager.Locations[locationDropdown.value];
+            var locationId = GameManager.Instance.LocationManager.LocationIds[locationDropdown.value];
             GameManager.Instance.LoadLocation(locationId);
             Close();
         }
 
         private void OnLocationChanged(int index)
         {
-            var id = GameManager.Instance.LocationManager.Locations[index];
+            var id = GameManager.Instance.LocationManager.LocationIds[index];
             continueButton.interactable = GameManager.Instance.SaveManager.HasProgress(id);
         }
 
@@ -44,7 +44,7 @@ namespace UI
         {
             base.Open();
 
-            var locations = GameManager.Instance.LocationManager.Locations;
+            var locations = GameManager.Instance.LocationManager.LocationIds;
             
             locationDropdown.options = locations.Select(id => new TMP_Dropdown.OptionData(id)).ToList();
             locationDropdown.value = 0;

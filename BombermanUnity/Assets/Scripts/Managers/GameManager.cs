@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace Managers
 {
+    /// <summary>
+    /// Main manager
+    /// </summary>
     public class GameManager : MonoBehaviour
     {
         [SerializeField] private WindowManager windowManager;
@@ -26,15 +29,16 @@ namespace Managers
 
         public async void FinishGame(bool result)
         {
-            _saveManager.DeleteProgress(locationManager.CurrentLocation);
+            _saveManager.DeleteProgress(locationManager.CurrentLocationId);
             windowManager.CloseWindow("battle");
-            await Task.Delay(600);
+            //delay to see the death animation before opening the window 
+            await Task.Delay(1000);
             windowManager.OpenWindow("gameOver", result);
         }
 
         public void OpenStartScreen()
         {
-            locationManager.UnloadLocation();
+            locationManager.UnloadCurrentLocation();
             windowManager.OpenWindow("start");
         }
         
@@ -47,7 +51,7 @@ namespace Managers
 
         public void RestartLocation()
         {
-            LoadLocation(locationManager.CurrentLocation);
+            LoadLocation(locationManager.CurrentLocationId);
         }
 
         public void SaveProgress()

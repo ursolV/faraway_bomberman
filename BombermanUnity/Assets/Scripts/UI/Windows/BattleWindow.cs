@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using System.Linq;
 using Managers;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,10 +12,18 @@ namespace UI
         [SerializeField] private Button throwButton;
         [SerializeField] private Slider powerSlider;
         [SerializeField] private Image selectedBomb;
+        [SerializeField] private Sprite[] bombSprites;
 
         private float _power;
-        private string _selectedBomb = "bomb";
+        private string _selectedBomb;
         private State _state;
+
+        public void OnSelectBomb(string bombId)
+        {
+            _selectedBomb = bombId;
+            selectedBomb.sprite = bombSprites.FirstOrDefault(s =>
+                string.Equals(s.name, bombId, StringComparison.CurrentCultureIgnoreCase));
+        }
         
         public void OnThrowStartHold()
         {

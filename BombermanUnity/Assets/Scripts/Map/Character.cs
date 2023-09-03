@@ -27,6 +27,10 @@ namespace Map
             healthBar.gameObject.SetActive(true);
         }
 
+        /// <summary>
+        /// Damage the current character
+        /// </summary>
+        /// <param name="damage">amount of damage</param>
         public void Damage(int damage)
         {
             if (_health <= 0)
@@ -43,11 +47,18 @@ namespace Map
             }
         }
 
+        /// <summary>
+        /// Play the attack animation
+        /// </summary>
         public void Attack()
         {
             animator.SetTrigger(AttackName);
         }
 
+        /// <summary>
+        /// get character data that can be saved
+        /// </summary>
+        /// <returns></returns>
         public CharacterSave GetSave()
         {
             return new CharacterSave
@@ -57,6 +68,10 @@ namespace Map
             };
         }
 
+        /// <summary>
+        /// unpack data from the save
+        /// </summary>
+        /// <param name="save"></param>
         public void UnpackSave(CharacterSave save)
         {
             _health = save.health;
@@ -64,6 +79,9 @@ namespace Map
         }
     }
 
+    /// <summary>
+    /// Data that stores the state of the character
+    /// </summary>
     [Serializable]
     public struct CharacterSave
     {

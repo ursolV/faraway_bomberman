@@ -2,6 +2,10 @@
 
 namespace Managers
 {
+    /// <summary>
+    /// Save game data by key to <see cref="PlayerPrefs"/>
+    /// </summary>
+    /// <typeparam name="T">type of data that will be stored</typeparam>
     public class SaveManager<T> : ISaveManager<T>
     {
         public void SaveProgress(string key, T progress)
