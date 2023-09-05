@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using Map;
+using Services;
 using UI;
 using UnityEngine;
 
@@ -10,54 +10,52 @@ namespace Managers
     /// </summary>
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private WindowManager windowManager;
-        [SerializeField] private LocationManager locationManager;
+        [SerializeField] private WindowManager _windowManager;
+        [SerializeField] private LocationManager _locationManager;
 
-        private ISaveManager<LocationSave> _saveManager;
+        private ISaveService<LocationSave> _saveService;
         private static GameManager _instance;
 
         public static GameManager Instance => _instance;
-        public LocationManager LocationManager => locationManager;
-        public ISaveManager<LocationSave> SaveManager => _saveManager;
+        public LocationManager LocationManager => _locationManager;
+        public ISaveService<LocationSave> SaveService => _saveService;
 
         private void Start()
         {
             _instance = this;
-            _saveManager = new SaveManager<LocationSave>();
-            windowManager.OpenWindow("start");
+            _saveService = new SaveService<LocationSave>();
+            _windowManager.OpenWindow("start");
         }
 
-        public async void FinishGame(bool result)
+        public void FinishGame(bool result)
         {
-            _saveManager.DeleteProgress(locationManager.CurrentLocationId);
-            windowManager.CloseWindow("battle");
-            //delay to see the death animation before opening the window 
-            await Task.Delay(1000);
-            windowManager.OpenWindow("gameOver", result);
+            _saveService.DeleteProgress(_locationManager.CurrentLocationId);
+            _windowManager.CloseWindow("battle");
+            _windowManager.OpenWindow("gameOver", result);
         }
 
         public void OpenStartScreen()
         {
-            locationManager.UnloadCurrentLocation();
-            windowManager.OpenWindow("start");
+            _locationManager.UnloadCurrentLocation();
+            _windowManager.OpenWindow("start");
         }
         
         public void LoadLocation(string locationId)
         {
-            var save = _saveManager.GetProgress(locationId);
-            locationManager.LoadLocation(locationId, save);
-            windowManager.OpenWindow("battle");
+            var save = _saveService.GetProgress(locationId);
+            _locationManager.LoadLocation(locationId, save);
+            _windowManager.OpenWindow("battle");
         }
 
         public void RestartLocation()
         {
-            LoadLocation(locationManager.CurrentLocationId);
+            LoadLocation(_locationManager.CurrentLocationId);
         }
 
         public void SaveProgress()
         {
-            var progress = locationManager.GetProgress();
-            _saveManager.SaveProgress(progress.id, progress.progress);
+            var progress = _locationManager.GetProgress();
+            _saveService.SaveProgress(progress.id, progress.progress);
         }
     }
 }

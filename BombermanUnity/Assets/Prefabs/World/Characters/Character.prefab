@@ -482,7 +482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57744401f4f54bd9b04d23398b62a394, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: 0
-  healthPoints: 100
-  healthBar: {fileID: 1579842526}
-  animator: {fileID: 6743214289973434721}
+  _enemy: 0
+  _healthPoints: 100
+  _healthBar: {fileID: 1579842526}
+  _animator: {fileID: 6743214289973434721}

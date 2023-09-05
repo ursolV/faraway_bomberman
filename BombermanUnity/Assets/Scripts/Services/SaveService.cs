@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 
-namespace Managers
+namespace Services
 {
     /// <summary>
     /// Save game data by key to <see cref="PlayerPrefs"/>
     /// </summary>
     /// <typeparam name="T">type of data that will be stored</typeparam>
-    public class SaveManager<T> : ISaveManager<T>
+    public class SaveService<T> : ISaveService<T>
     {
         public void SaveProgress(string key, T progress)
         {

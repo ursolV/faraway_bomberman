@@ -183,14 +183,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf0113d30b0d451192f98c0b91a4159f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxThrowDistance: 5
-  explosionRadius: 4
-  explosionPower: 300
-  speed: 10
-  bombRenderer: {fileID: 9104700401972276500}
-  aim: {fileID: 4818067668109969843}
-  explosionFX: {fileID: 8078426286881652562}
-  curve:
+  _maxThrowDistance: 5
+  _explosionRadius: 4
+  _explosionPower: 300
+  _speed: 10
+  _bombRenderer: {fileID: 9104700401972276500}
+  _aim: {fileID: 4818067668109969843}
+  _explosionFX: {fileID: 8078426286881652562}
+  _curve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3

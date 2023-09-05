@@ -6,23 +6,23 @@ namespace UI
 {
     public class PauseWindow : BaseWindow
     {
-        [SerializeField] private Button continueButton;
-        [SerializeField] private Button saveButton;
-        [SerializeField] private Button quitButton;
-        [SerializeField] private Button homeButton;
+        [SerializeField] private Button _continueButton;
+        [SerializeField] private Button _saveButton;
+        [SerializeField] private Button _quitButton;
+        [SerializeField] private Button _homeButton;
 
         private void Awake()
         {
-            continueButton.onClick.AddListener(Close);
-            saveButton.onClick.AddListener(OnSaveClick);
-            quitButton.onClick.AddListener(OnQuitClick);
-            homeButton.onClick.AddListener(OnHomeClick);
+            _continueButton.onClick.AddListener(Close);
+            _saveButton.onClick.AddListener(OnSaveClick);
+            _quitButton.onClick.AddListener(OnQuitClick);
+            _homeButton.onClick.AddListener(OnHomeClick);
         }
 
         public override void Open()
         {
             base.Open();
-            saveButton.interactable = true;
+            _saveButton.interactable = true;
         }
 
         private void OnQuitClick()
@@ -37,7 +37,7 @@ namespace UI
         private void OnSaveClick()
         {
             GameManager.Instance.SaveProgress();
-            saveButton.interactable = false;
+            _saveButton.interactable = false;
         }
 
         private void OnHomeClick()

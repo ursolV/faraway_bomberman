@@ -1,32 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Map;
+using Map.Entities;
 using UnityEngine;
 
 namespace Factories
 {
     /// <summary>
-    /// pool-factory that makes <see cref="BaseBomb"/>
+    /// Pool-factory that makes <see cref="IBomb"/>
     /// </summary>
     public class BombFactory : MonoBehaviour
     {
-        [SerializeField] BaseBomb[] bombPrototype;
-        
-        /// <summary>
-        /// bombs that can be reused
-        /// </summary>
-        private readonly Dictionary<string, Queue<BaseBomb>> _bombInstances = new Dictionary<string, Queue<BaseBomb>>();
-        /// <summary>
-        /// bombs that are currently in use
-        /// </summary>
-        private readonly Dictionary<string, List<BaseBomb>> _usedBombInstances = new Dictionary<string, List<BaseBomb>>();
+        [SerializeField] GameObject[] _bombPrototype;
 
         /// <summary>
-        /// get a vacant or new bomb
+        /// Bombs that can be reused
         /// </summary>
-        /// <param name="bombId"></param>
-        /// <returns></returns>
-        public BaseBomb GetBomb(string bombId)
+        private readonly Dictionary<string, Queue<IBomb>> _bombInstances = new Dictionary<string, Queue<IBomb>>();
+        /// <summary>
+        /// Bombs that are currently in use
+        /// </summary>
+        private readonly Dictionary<string, List<IBomb>> _usedBombInstances = new Dictionary<string, List<IBomb>>();
+
+        /// <summary>
+        /// Get a vacant or new bomb
+        /// </summary>
+        public IBomb GetBomb(string bombId)
         {
             if (_bombInstances.ContainsKey(bombId) && _bombInstances[bombId].Count > 0)
             {
@@ -35,33 +33,33 @@ namespace Factories
                 return bomb;
             }
 
-            var bombTemplate = bombPrototype.FirstOrDefault(x => x.Id() == bombId);
+            var bombTemplate = _bombPrototype.FirstOrDefault(x => x.name == bombId);
             if (bombTemplate == default)
             {
                 Debug.LogError($"Bomb with id {bombId} not found");
                 return null;
             }
             
-            var newBomb = bombTemplate.GetCopy();
+            var newBomb = bombTemplate.GetComponent<IBomb>().GetCopy();
             newBomb.BackToPool = () => ReturnBomb(newBomb);
             SetUsed(bombId, newBomb);
             return newBomb;
         }
 
-        private void ReturnBomb(BaseBomb bomb)
+        private void ReturnBomb(IBomb bomb)
         {
-            if(!_bombInstances.ContainsKey(bomb.Id()))
-                _bombInstances.Add(bomb.Id(), new Queue<BaseBomb>());
+            if(!_bombInstances.ContainsKey(bomb.Id))
+                _bombInstances.Add(bomb.Id, new Queue<IBomb>());
             
-            _usedBombInstances[bomb.Id()].Remove(bomb);
-            _bombInstances[bomb.Id()].Enqueue(bomb);
+            _usedBombInstances[bomb.Id].Remove(bomb);
+            _bombInstances[bomb.Id].Enqueue(bomb);
             bomb.BackToPoolHook();
         }
         
-        private void SetUsed(string bombId, BaseBomb bomb)
+        private void SetUsed(string bombId, IBomb bomb)
         {
             if(!_usedBombInstances.ContainsKey(bombId))
-                _usedBombInstances.Add(bombId, new List<BaseBomb>());
+                _usedBombInstances.Add(bombId, new List<IBomb>());
             _usedBombInstances[bombId].Add(bomb);
             bomb.GetFromPoolHook();
         }

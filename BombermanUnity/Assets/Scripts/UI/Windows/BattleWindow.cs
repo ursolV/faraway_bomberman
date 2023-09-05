@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Linq;
 using Managers;
+using Map.Entities;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,19 +10,29 @@ namespace UI
 {
     public class BattleWindow : BaseWindow
     {
-        [SerializeField] private Button throwButton;
-        [SerializeField] private Slider powerSlider;
-        [SerializeField] private Image selectedBomb;
-        [SerializeField] private Sprite[] bombSprites;
+        [SerializeField] private Button _throwButton;
+        [SerializeField] private Slider _powerSlider;
+        [SerializeField] private Image _selectedBombImage;
+        [SerializeField] private Sprite[] _bombSprites;
+        [SerializeField] private LocationManager _locationManager;
 
-        private float _power;
+        private float _strength;
         private string _selectedBomb;
         private State _state;
+        private Personage _personage;
+        
+        public static event Action<string, float> OnThrow;
+
+        public override void Open()
+        {
+            base.Open();
+            _personage = _locationManager.CurrentLocation.GetPersonage();
+        }
 
         public void OnSelectBomb(string bombId)
         {
             _selectedBomb = bombId;
-            selectedBomb.sprite = bombSprites.FirstOrDefault(s =>
+            _selectedBombImage.sprite = _bombSprites.FirstOrDefault(s =>
                 string.Equals(s.name, bombId, StringComparison.CurrentCultureIgnoreCase));
         }
         
@@ -30,7 +41,7 @@ namespace UI
             if (_state != State.Wait)
                 return;
             _state = State.Charge;
-            powerSlider.gameObject.SetActive(true);
+            _powerSlider.gameObject.SetActive(true);
             StartCoroutine(Fill());
         }
 
@@ -40,26 +51,28 @@ namespace UI
                 return;
             _state = State.Cooldown;
             StopAllCoroutines();
-            powerSlider.gameObject.SetActive(false);
+            _powerSlider.gameObject.SetActive(false);
 
             //set visual button interactable
-            throwButton.interactable = false;
-            await GameManager.Instance.LocationManager.Throw(_selectedBomb, _power);
-            throwButton.interactable = true;
+            _throwButton.interactable = false;
+
+            await _personage.ThrowBomb(_selectedBomb, _strength);
+            
+            _throwButton.interactable = true;
             _state = State.Wait;
         }
 
         private IEnumerator Fill()
         {
-            _power = 0;
-            while (_power < 1)
+            _strength = 0;
+            while (_strength < 1)
             {
-                _power += Time.deltaTime;
-                powerSlider.value = _power;
+                _strength += Time.deltaTime;
+                _powerSlider.value = _strength;
                 yield return null;
             }
 
-            powerSlider.value = _power = 1;
+            _powerSlider.value = _strength = 1;
         }
         
         private enum State

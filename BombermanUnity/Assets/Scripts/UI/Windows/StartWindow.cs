@@ -8,28 +8,28 @@ namespace UI
 {
     public class StartWindow : BaseWindow
     {
-        [SerializeField] private TMP_Dropdown locationDropdown;
-        [SerializeField] private Button continueButton;
-        [SerializeField] private Button newGameButton;
+        [SerializeField] private TMP_Dropdown _locationDropdown;
+        [SerializeField] private Button _continueButton;
+        [SerializeField] private Button _newGameButton;
 
         private void Awake()
         {
-            locationDropdown.onValueChanged.AddListener(OnLocationChanged);
-            continueButton.onClick.AddListener(OnContinueClick);
-            newGameButton.onClick.AddListener(OnNewGameClick);
+            _locationDropdown.onValueChanged.AddListener(OnLocationChanged);
+            _continueButton.onClick.AddListener(OnContinueClick);
+            _newGameButton.onClick.AddListener(OnNewGameClick);
         }
 
         private void OnNewGameClick()
         {
-            var locationId = GameManager.Instance.LocationManager.LocationIds[locationDropdown.value];
-            GameManager.Instance.SaveManager.DeleteProgress(locationId);
+            var locationId = GameManager.Instance.LocationManager.LocationIds[_locationDropdown.value];
+            GameManager.Instance.SaveService.DeleteProgress(locationId);
             GameManager.Instance.LoadLocation(locationId);
             Close();
         }
 
         private void OnContinueClick()
         {
-            var locationId = GameManager.Instance.LocationManager.LocationIds[locationDropdown.value];
+            var locationId = GameManager.Instance.LocationManager.LocationIds[_locationDropdown.value];
             GameManager.Instance.LoadLocation(locationId);
             Close();
         }
@@ -37,7 +37,7 @@ namespace UI
         private void OnLocationChanged(int index)
         {
             var id = GameManager.Instance.LocationManager.LocationIds[index];
-            continueButton.interactable = GameManager.Instance.SaveManager.HasProgress(id);
+            _continueButton.interactable = GameManager.Instance.SaveService.HasProgress(id);
         }
 
         public override void Open()
@@ -46,8 +46,8 @@ namespace UI
 
             var locations = GameManager.Instance.LocationManager.LocationIds;
             
-            locationDropdown.options = locations.Select(id => new TMP_Dropdown.OptionData(id)).ToList();
-            locationDropdown.value = 0;
+            _locationDropdown.options = locations.Select(id => new TMP_Dropdown.OptionData(id)).ToList();
+            _locationDropdown.value = 0;
             OnLocationChanged(0);
         }
     }
