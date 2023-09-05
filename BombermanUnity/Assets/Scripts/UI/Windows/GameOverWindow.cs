@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class GameOverWindow : BaseWindow
+    public class GameOverWindow : AbstractWindow
     {
         [SerializeField] private TextMeshProUGUI _resultText;
         [SerializeField] private Button _restartButton;

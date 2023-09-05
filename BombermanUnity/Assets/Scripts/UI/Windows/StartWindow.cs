@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class StartWindow : BaseWindow
+    public class StartWindow : AbstractWindow
     {
         [SerializeField] private TMP_Dropdown _locationDropdown;
         [SerializeField] private Button _continueButton;

@@ -35,6 +35,7 @@ namespace Map
 
         private void OnExplosion(Explosion obj)
         {
+            //todo make events 
             if (_characters.Where(c => !c.Enemy).All(c => c.Health <= 0))
             {
                 //loose

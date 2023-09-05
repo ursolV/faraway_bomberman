@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class BattleWindow : BaseWindow
+    public class BattleWindow : AbstractWindow
     {
         [SerializeField] private Button _throwButton;
         [SerializeField] private Slider _powerSlider;

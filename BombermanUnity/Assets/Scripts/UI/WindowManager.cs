@@ -11,7 +11,7 @@ namespace UI
     /// </summary>
     public class WindowManager : MonoBehaviour
     {
-        [SerializeField] private List<BaseWindow> windows;
+        [SerializeField] private List<AbstractWindow> windows;
 
         private void Awake()
         {
@@ -47,7 +47,7 @@ namespace UI
                 window.Close();
         }
 
-        private BaseWindow GetWindow(string windowId)
+        private AbstractWindow GetWindow(string windowId)
         {
             var window = windows.FirstOrDefault(w => string.Equals(w.gameObject.name, windowId, StringComparison.CurrentCultureIgnoreCase));
             if (window != default)

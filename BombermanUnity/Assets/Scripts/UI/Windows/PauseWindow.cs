@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class PauseWindow : BaseWindow
+    public class PauseWindow : AbstractWindow
     {
         [SerializeField] private Button _continueButton;
         [SerializeField] private Button _saveButton;
